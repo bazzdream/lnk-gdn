@@ -6,6 +6,12 @@ const morgan = require('morgan');
 const cors = require('cors');
 const {nanoid} = require('nanoid');
 
+require('dotenv').config();
+
+const db = monk(process.env.MONGODB_URI);
+const urls = db.get('urls');
+urls.createIndex({slug: 1}, {unique: true});
+
 const app = express()
 
 app.use(helmet())
@@ -39,12 +45,17 @@ app.post('/url', async (req, res, next) => {
         if(!slug) {
             slug = nanoid(5)
         }
-        slug = slug.toLowerCase();   
-        res.json({
+        slug = slug.toLowerCase(); 
+        const newUrl = {
+            url,
             slug,
-            url
-        });   
+        }
+        const created = await urls.insert(newUrl);
+        res.json(created);
     } catch (error) {
+        if(error.message.startsWith('E11000')) {
+            error.message = "Slug in use. 🍔"
+        }
         next(error);
     }
 });
