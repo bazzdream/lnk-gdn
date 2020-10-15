@@ -24,9 +24,18 @@ app.use(express.static('./public'))
 //     // TODO: get a short url by id
 // })
 
-// app.get('/:id', (req, res) => {
-//     // TODO: redirect to url
-// })
+app.get('/:id', async (req, res) => {
+    const {id: slug} = req.params;
+
+    try {
+        const url = await urls.findOne({slug})
+        if(url) {
+            res.redirect(url.url)
+        }
+    } catch (error) {
+        
+    }
+})
 
 const schema = yup.object().shape({
     slug: yup.string().trim().matches(/[\w\-]/i),
