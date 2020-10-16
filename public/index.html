@@ -26,7 +26,8 @@
         </form>
 
         <div v-if="created">
-            Your short url: {{ location.href + created.slug }}
+            <p v-if="created.message">{{ created.message }}</p>
+            <p v-if="created.slug">Your short url: <a :href="created.slug" target="_blank">{{ location.href + created.slug }}</a></p>
         </div>
     </main>
 
