@@ -14,17 +14,15 @@ urls.createIndex({slug: 1}, {unique: true});
 
 const app = express()
 
-app.use(helmet())
+app.use(helmet({
+    contentSecurityPolicy: false,
+  }))
 app.use(morgan('tiny'))
 app.use(cors())
 app.use(express.json())
 app.use(express.static('./public'))
 
-// app.get('/url/:id', (req, res) => {
-//     // TODO: get a short url by id
-// })
-
-app.get('/:id', async (req, res) => {
+app.get('/:id', async (req, res, next) => {
     const {id: slug} = req.params;
 
     try {
@@ -32,8 +30,9 @@ app.get('/:id', async (req, res) => {
         if(url) {
             res.redirect(url.url)
         }
+        res.redirect(`/?error=slug ${slug} not found`)
     } catch (error) {
-        
+        res.redirect(`/?error=Link not found`)
     }
 })
 
