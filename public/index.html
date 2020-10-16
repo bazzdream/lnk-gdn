@@ -15,7 +15,7 @@
     <main id="app">
         <form @submit.prevent="createUrl()">
             <label for="url">
-                <input class="form-control" v-model="url" type="url" name="url" id="id" placeholder="URL to be shortened...*">
+                <input required class="form-control" v-model="url" type="url" name="url" id="id" placeholder="URL to be shortened...*">
             </label>
 
             <label for="slug">
