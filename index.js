@@ -60,15 +60,16 @@ app.post('/url', async (req, res, next) => {
     let {slug, url} = req.body;
 
     try {
+        if(!slug) {
+            slug = nanoid(5)
+        }
+        slug = slug.toLowerCase(); 
+
         await schema.validate({
             slug,
             url
         });
 
-        if(!slug) {
-            slug = nanoid(5)
-        }
-        slug = slug.toLowerCase(); 
         const newUrl = {
             url,
             slug,
